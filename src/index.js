@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
-import exampleRoutes from './routes/example.js';
+import authRoutes from './routes/auth.js';
 import healthRoutes from './routes/health.js';
 import logger from './utils/logger.js';
 
@@ -16,7 +16,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use('/api/example', exampleRoutes);
+app.use('/auth', authRoutes);
 app.use('/health', healthRoutes);
 
 app.use(errorHandler);
