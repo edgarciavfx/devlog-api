@@ -1,4 +1,5 @@
-import { hashPassword, comparePassword, generateToken, findUserByEmail, createUser } from '../utils/auth.js';
+import { hashPassword, comparePassword, generateToken } from '../utils/auth.js';
+import { findUserByEmail, createUser } from '../repositories/userRepository.js';
 import logger from '../utils/logger.js';
 
 export const register = async (req, res) => {
