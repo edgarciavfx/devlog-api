@@ -15,7 +15,7 @@ export const logs = pgTable('logs', {
   userId: uuid('user_id').notNull().references(() => users.id),
   title: varchar('title', { length: 255 }).notNull(),
   content: text('content').notNull(),
-  tags: jsonb('tags').default([]),
+  tags: jsonb('tags').default([]).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

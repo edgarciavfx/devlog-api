@@ -60,8 +60,8 @@ export const createLogSchema = z.object({
 });
 
 export const updateLogSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(255, 'Title must be at most 255 characters').optional(),
-  content: z.string().min(1, 'Content is required').optional(),
+  title: z.string().min(1, 'Title cannot be empty when provided').max(255, 'Title must be at most 255 characters').optional(),
+  content: z.string().min(1, 'Content cannot be empty when provided').optional(),
   tags: z.array(z.string()).optional(),
 });
 

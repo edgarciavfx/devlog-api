@@ -1,6 +1,7 @@
 import { db } from '../db/index.js';
 import { logs } from '../db/schema.js';
 import { eq, and, gte, lte, asc } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 export const createLog = async (userId, data) => {
   return db.insert(logs).values({
@@ -26,18 +27,12 @@ export const getLogsByUser = async (userId, options = {}) => {
   if (endDate) {
     conditions.push(lte(logs.createdAt, new Date(endDate)));
   }
-
-  let query = db.select().from(logs).where(and(...conditions)).orderBy(asc(logs.createdAt));
-
-  const results = await query;
-
   if (tags && tags.length > 0) {
-    return results.filter(log => 
-      tags.some(tag => log.tags && log.tags.includes(tag))
-    );
+    const tagArray = tags.map(t => t.trim());
+    conditions.push(sql`${logs.tags} ?| array[${tagArray.map(t => sql`${t}`)}]`);
   }
 
-  return results;
+  return db.select().from(logs).where(and(...conditions)).orderBy(asc(logs.createdAt));
 };
 
 export const getRecentWeekLogs = async (userId) => {

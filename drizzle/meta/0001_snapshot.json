@@ -37,7 +37,7 @@
           "name": "tags",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'[]'::jsonb"
         },
         "created_at": {
@@ -55,7 +55,24 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "logs_user_id_idx": {
+          "name": "logs_user_id_idx",
+          "columns": [
+            {
+              "columnName": "user_id"
+            }
+          ]
+        },
+        "logs_created_at_idx": {
+          "name": "logs_created_at_idx",
+          "columns": [
+            {
+              "columnName": "created_at"
+            }
+          ]
+        }
+      },
       "foreignKeys": {
         "logs_user_id_users_id_fk": {
           "name": "logs_user_id_users_id_fk",
@@ -67,7 +84,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
