@@ -2,10 +2,6 @@
   "testEnvironment": "node",
   "transform": {},
   "setupFilesAfterEnv": ["./tests/setup.js"],
-  "testEnvironmentOptions": {
-    "env": {
-      "DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/my_db_test",
-      "NODE_ENV": "test"
-    }
-  }
+  "globalSetup": "<rootDir>/tests/globalSetup.js",
+  "globalTeardown": "<rootDir>/tests/globalTeardown.js"
 }
