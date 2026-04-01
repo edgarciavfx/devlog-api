@@ -52,3 +52,21 @@ export const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
   password: z.string().min(1, 'Password is required'),
 });
+
+export const createLogSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(255, 'Title must be at most 255 characters'),
+  content: z.string().min(1, 'Content is required'),
+  tags: z.array(z.string()).optional(),
+});
+
+export const updateLogSchema = z.object({
+  title: z.string().min(1, 'Title cannot be empty when provided').max(255, 'Title must be at most 255 characters').optional(),
+  content: z.string().min(1, 'Content cannot be empty when provided').optional(),
+  tags: z.array(z.string()).optional(),
+});
+
+export const logQuerySchema = z.object({
+  startDate: z.string().datetime({ message: 'Invalid ISO date format' }).optional(),
+  endDate: z.string().datetime({ message: 'Invalid ISO date format' }).optional(),
+  tags: z.string().optional(),
+});

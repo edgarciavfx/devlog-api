@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import healthRoutes from './routes/health.js';
+import logRoutes from './routes/logs.js';
 import logger from './utils/logger.js';
 import { swaggerServe, swaggerSetup } from './config/swagger.js';
 
@@ -31,6 +32,7 @@ app.use(express.json({ limit: '10kb' }));
 
 app.use('/auth', authRoutes);
 app.use('/health', healthRoutes);
+app.use('/logs', logRoutes);
 app.use('/api-docs', swaggerServe, swaggerSetup);
 
 app.use(errorHandler);

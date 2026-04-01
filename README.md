@@ -1,6 +1,6 @@
-# REST API Starter
+# DevLog API
 
-A clean, scalable, secure, and modern REST API starter template built with Node.js, Express, and PostgreSQL.
+A REST API for developer daily logs - track wins, knowledge, and code snippets. Perfect for junior developers wanting to document their learning journey.
 
 ## Features
 
@@ -13,6 +13,7 @@ A clean, scalable, secure, and modern REST API starter template built with Node.
 - **Rate Limiting** - Brute force protection (10 requests/15min for auth)
 - **CORS** - Configurable allowed origins
 - **Jest** - Integration and unit tests with CI/CD
+- **Tags** - Organize logs with tags (Obsidian-style)
 
 ## Quick Start
 
@@ -45,16 +46,101 @@ JWT_EXPIRES=7d
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
 
-## Commands
+## API Endpoints
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start production server |
-| `npm run dev` | Start development with hot reload |
-| `npm test` | Run all tests |
-| `npm test -- <file>` | Run single test file |
-| `npx drizzle-kit studio` | Open database GUI |
-| `node drizzle/seed.js` | Seed database with sample data |
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/auth/register` | Register new user |
+| POST | `/auth/login` | Login and get JWT token |
+
+### Logs (Requires JWT)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/logs` | Create a new log entry |
+| GET | `/logs` | Get all logs (supports filters) |
+| GET | `/logs/week/recent` | Get last 7 days of logs |
+| GET | `/logs/:id` | Get single log by ID |
+| PUT | `/logs/:id` | Update log entry |
+| DELETE | `/logs/:id` | Delete log entry |
+
+### Utility
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check |
+| GET | `/api-docs` | Swagger documentation |
+
+## Log API Usage
+
+### Create a Log
+
+```bash
+curl -X POST http://localhost:3000/logs \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "title": "Fixed production bug",
+    "content": "Fixed a memory leak in the user service caused by improper event listener cleanup.",
+    "tags": ["win", "bugfix", "performance"]
+  }'
+```
+
+### Get All Logs (with optional filters)
+
+```bash
+# All logs
+curl http://localhost:3000/logs \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Filter by date range
+curl "http://localhost:3000/logs?startDate=2026-01-01T00:00:00Z&endDate=2026-01-31T23:59:59Z" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Filter by tags
+curl "http://localhost:3000/logs?tags=win,learning" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Get Recent Week Logs
+
+```bash
+curl http://localhost:3000/logs/week/recent \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Update a Log
+
+```bash
+curl -X PUT http://localhost:3000/logs/LOG_ID \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "title": "Updated title",
+    "tags": ["win", "updated"]
+  }'
+```
+
+### Delete a Log
+
+```bash
+curl -X DELETE http://localhost:3000/logs/LOG_ID \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Log Schema
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID | Unique log identifier |
+| `userId` | UUID | Owner user ID |
+| `title` | String | Log title (max 255 chars) |
+| `content` | Text | Log content/body |
+| `tags` | JSON Array | Array of tag strings |
+| `createdAt` | DateTime | Creation timestamp |
+| `updatedAt` | DateTime | Last update timestamp |
 
 ## Project Structure
 
@@ -75,14 +161,16 @@ tests/
 └── *.test.js       # Test files
 ```
 
-## API Endpoints
+## Commands
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/auth/register` | Register new user |
-| POST | `/auth/login` | Login and get JWT token |
-| GET | `/health` | Health check |
-| GET | `/api-docs` | Swagger documentation |
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start production server |
+| `npm run dev` | Start development with hot reload |
+| `npm test` | Run all tests |
+| `npm test -- <file>` | Run single test file |
+| `npx drizzle-kit studio` | Open database GUI |
+| `node drizzle/seed.js` | Seed database with sample data |
 
 ## Testing
 
@@ -112,12 +200,7 @@ GitHub Actions workflow is configured in `.github/workflows/ci.yml`:
 - **Request Size**: Limited to 10kb to prevent payload attacks
 - **Password Hashing**: bcrypt with configurable salt rounds
 - **JWT**: Token-based auth with expiration
-
-## Extending the API
-
-1. **Add new entity**: Create schema in `src/db/schema.js`, add repository, controller, and routes
-2. **Add validation**: Define Zod schema in `src/utils/validation.js`
-3. **Add tests**: Create test file in `tests/integration/`
+- **Private Logs**: Users can only access their own logs
 
 ## License
 
