@@ -5,7 +5,7 @@ export const validateBody = (schema) => (req, res, next) => {
     schema.parse(req.body);
     next();
   } catch (error) {
-    const messages = error.errors.map((e) => `${e.path.join('.')}: ${e.message}`);
+    const messages = error.issues.map((e) => `${e.path.join('.')}: ${e.message}`);
     res.status(400).json({ error: { message: 'Validation failed', details: messages } });
   }
 };
@@ -15,7 +15,7 @@ export const validateParams = (schema) => (req, res, next) => {
     schema.parse(req.params);
     next();
   } catch (error) {
-    const messages = error.errors.map((e) => `${e.path.join('.')}: ${e.message}`);
+    const messages = error.issues.map((e) => `${e.path.join('.')}: ${e.message}`);
     res.status(400).json({ error: { message: 'Validation failed', details: messages } });
   }
 };
@@ -25,7 +25,7 @@ export const validateQuery = (schema) => (req, res, next) => {
     schema.parse(req.query);
     next();
   } catch (error) {
-    const messages = error.errors.map((e) => `${e.path.join('.')}: ${e.message}`);
+    const messages = error.issues.map((e) => `${e.path.join('.')}: ${e.message}`);
     res.status(400).json({ error: { message: 'Validation failed', details: messages } });
   }
 };
