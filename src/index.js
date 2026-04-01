@@ -7,6 +7,7 @@ import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import healthRoutes from './routes/health.js';
 import logger from './utils/logger.js';
+import { swaggerServe, swaggerSetup } from './config/swagger.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/health', healthRoutes);
+app.use('/api-docs', swaggerServe, swaggerSetup);
 
 app.use(errorHandler);
 
