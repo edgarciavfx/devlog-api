@@ -1,5 +1,7 @@
 import express from 'express';
 import { register, login } from '../controllers/authController.js';
+import { validateBody } from '../utils/validation.js';
+import { registerSchema, loginSchema } from '../utils/validation.js';
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ const router = express.Router();
  * @return {object} 400 - Validation error or email already exists
  * @return {object} 500 - Internal server error
  */
-router.post('/register', register);
+router.post('/register', validateBody(registerSchema), register);
 
 /**
  * POST /auth/login
@@ -29,6 +31,6 @@ router.post('/register', register);
  * @return {object} 400 - Missing required fields
  * @return {object} 500 - Internal server error
  */
-router.post('/login', login);
+router.post('/login', validateBody(loginSchema), login);
 
 export default router;

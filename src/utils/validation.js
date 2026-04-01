@@ -41,3 +41,14 @@ export const exampleSchema = z.object({
 export const idParamSchema = z.object({
   id: z.string().uuid('Invalid ID format'),
 });
+
+export const registerSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  username: z.string().optional(),
+});
+
+export const loginSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(1, 'Password is required'),
+});
