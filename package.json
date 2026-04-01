@@ -1,7 +1,7 @@
 {
-  "name": "rest-api",
+  "name": "devlog-api",
   "version": "1.0.0",
-  "description": "A clean, scalable, secure, and modern REST API starter template",
+  "description": "A REST API for developer daily logs - track wins, knowledge, and code snippets",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,14 +9,22 @@
     "dev": "nodemon --env-file=.env src/index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit --passWithNoTests"
   },
-  "keywords": ["express", "rest-api", "postgresql", "jwt", "drizzle", "starter"],
+  "keywords": [
+    "express",
+    "rest-api",
+    "postgresql",
+    "jwt",
+    "drizzle",
+    "developer",
+    "daily-logs",
+    "notes"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
-    "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.2",
@@ -30,6 +38,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.31.10",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"
