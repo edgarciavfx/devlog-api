@@ -7,6 +7,7 @@
 - **Database**: PostgreSQL with Drizzle ORM
 - **Testing**: Jest (v30) with `--experimental-vm-modules`
 - **Documentation**: Swagger UI at `/api-docs` endpoint
+- **Security**: Rate limiting, CORS, JWT, bcrypt
 
 ## Commands
 
@@ -32,6 +33,7 @@ npx jest --watch                 # Watch mode for development
 npx drizzle-kit generate         # Generate migrations
 npx drizzle-kit push             # Push schema to DB
 npx drizzle-kit studio           # Open DB GUI
+node drizzle/seed.js            # Seed database with sample data
 ```
 
 ## CLI Tools Available
@@ -54,14 +56,18 @@ npx drizzle-kit studio           # Open DB GUI
 - Directory structure:
   ```
   src/
+  ├── config/         # Swagger configuration
   ├── controllers/   # Request handlers
   ├── routes/        # Express router definitions
-  ├── middleware/    # Express middleware
+  ├── middleware/    # Express middleware (auth, rateLimiter, errorHandler)
   ├── db/            # Database schema and connection
   ├── repositories/  # Data access layer
-  ├── utils/         # Utilities (auth, validation, logger)
+  ├── utils/         # Utilities (auth, validation, logger, apiResponse)
   └── config/        # Configuration (swagger, etc.)
   tests/
+  ├── integration/    # Integration tests
+  ├── globalSetup.js # Test database cleanup
+  ├── globalTeardown.js # Server cleanup
   └── *.test.js      # Test files
   ```
 
@@ -111,6 +117,15 @@ export const register = async (req, res) => {
 };
 ```
 
+### Security
+
+- **Rate Limiting**: Use `src/middleware/rateLimiter.js`
+  - General rate limiter: 100 requests/15min
+  - Auth limiter (login/register): 10 requests/15min
+  - Skip in test environment
+- **CORS**: Configure via `ALLOWED_ORIGINS` env variable
+- **Request Size**: Limited to 10kb in express.json()
+
 ### Error Handling
 
 - Use Winston logger for structured logging
@@ -125,6 +140,7 @@ export const register = async (req, res) => {
 
 - Use Zod for request body validation (in `src/utils/validation.js`)
 - Validate in controller or middleware before business logic
+- Available schemas: `registerSchema`, `loginSchema`, `idParamSchema`
 
 ### Database (Drizzle ORM)
 
@@ -146,6 +162,7 @@ export const users = pgTable('users', {
 - Success: `res.status(200).json({ ...data })`
 - Created: `res.status(201).json({ message: '...', ...data })`
 - Errors: `res.status(code).json({ error: { message: '...' } })`
+- Use `src/utils/apiResponse.js` for standardized responses
 
 ### Testing
 
@@ -153,6 +170,9 @@ export const users = pgTable('users', {
 - Use `describe` and `it` blocks
 - Use `supertest` for integration tests on Express routes
 - Setup file: `tests/setup.js`
+- Global setup: `tests/globalSetup.js` (cleans test DB)
+- Global teardown: `tests/globalTeardown.js` (closes server)
+- Test database: `my_db_test`
 
 ### JSDoc for Swagger
 
@@ -164,6 +184,6 @@ export const users = pgTable('users', {
 - No TypeScript - plain JavaScript only
 - No formatter/linter configured - use reasonable formatting
 - Use JSDoc for public function documentation
-- Environment variables: See `.env.example` (PORT, JWT_SECRET, DATABASE_URL, etc.)
+- Environment variables: See `.env.example`
 - Keep functions small and focused
 - Use const over let, avoid var
