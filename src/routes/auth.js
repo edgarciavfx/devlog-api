@@ -2,6 +2,7 @@ import express from 'express';
 import { register, login } from '../controllers/authController.js';
 import { validateBody } from '../utils/validation.js';
 import { registerSchema, loginSchema } from '../utils/validation.js';
+import { authLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -15,9 +16,10 @@ const router = express.Router();
  * @property {string} request.body.username - Optional username
  * @return {object} 201 - User created successfully
  * @return {object} 400 - Validation error or email already exists
+ * @return {object} 429 - Too many attempts
  * @return {object} 500 - Internal server error
  */
-router.post('/register', validateBody(registerSchema), register);
+router.post('/register', authLimiter, validateBody(registerSchema), register);
 
 /**
  * POST /auth/login
@@ -29,8 +31,9 @@ router.post('/register', validateBody(registerSchema), register);
  * @return {object} 200 - Login successful, returns JWT token
  * @return {object} 401 - Invalid credentials or account inactive
  * @return {object} 400 - Missing required fields
+ * @return {object} 429 - Too many attempts
  * @return {object} 500 - Internal server error
  */
-router.post('/login', validateBody(loginSchema), login);
+router.post('/login', authLimiter, validateBody(loginSchema), login);
 
 export default router;
