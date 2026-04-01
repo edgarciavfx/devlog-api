@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import exampleRoutes from './routes/example.js';
 import healthRoutes from './routes/health.js';
+import logger from './utils/logger.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,7 +22,7 @@ app.use('/health', healthRoutes);
 app.use(errorHandler);
 
 const server = app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });
 
 app.close = () => server.close();
