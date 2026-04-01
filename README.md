@@ -121,4 +121,4 @@ GitHub Actions workflow is configured in `.github/workflows/ci.yml`:
 
 ## License
 
-ISC
+MIT

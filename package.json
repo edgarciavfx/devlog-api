@@ -1,7 +1,7 @@
 {
   "name": "rest-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "A clean, scalable, secure, and modern REST API starter template",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,9 +9,9 @@
     "dev": "nodemon --env-file=.env src/index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit --passWithNoTests"
   },
-  "keywords": [],
+  "keywords": ["express", "rest-api", "postgresql", "jwt", "drizzle", "starter"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
